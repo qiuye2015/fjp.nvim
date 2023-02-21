@@ -512,5 +512,17 @@ cmp.setup {
   },
 }
 
+-- FJP add
+-- vim.keymap.set('n', '<leader>e', ':NeoTreeFloatToggle<CR>', {
+vim.keymap.set('n', '<leader>e', ':NeoTreeRevealToggle<CR>', {
+-- vim.keymap.set('n', '<leader>e', ':NeoTreeFocusToggle<CR>', {
+-- vim.keymap.set('n', '<leader>e', ':Neotree focus toggle<CR>', {
+    noremap = true
+})
+
+vim.keymap.set('n', '<leader>ef', ':NeoTreeFloatToggle<CR>', {
+    noremap = true
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
