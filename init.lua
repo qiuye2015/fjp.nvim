@@ -37,7 +37,6 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -222,7 +221,26 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  -- { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim', opts = {
+    ---Add a space b/w comment and the line
+    padding = true,
+    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+    opleader = {
+      ---Line-comment keymap
+      line = 'gcp', -- line = 'gc',
+      ---Block-comment keymap
+      block = 'gbp', -- block = 'gb',
+    },
+    ---Enable keybindings
+    ---NOTE: If given `false` then the plugin won't create any mappings
+    mappings = {
+      ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+      basic = true,
+      ---Extra mapping; `gco`, `gcO`, `gcA`
+      extra = false,
+    },
+  } },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -274,13 +292,14 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+-- vim.o.mouse = 'a'
+vim.o.mouse = ''
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -563,13 +582,17 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
+  clangd = {},
+  gopls = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  bashls = {},
+  cmake = {},
+  sqlls = {},
+  dockerls = {},
+  docker_compose_language_service = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -656,6 +679,31 @@ cmp.setup {
     { name = 'path' },
   },
 }
+
+-- FJP add
+vim.keymap.set('n', '<leader>nt', ':NeoTreeRevealToggle<CR>', {
+  noremap = true
+})
+
+vim.keymap.set('n', '<leader>nf', ':NeoTreeFloatToggle<CR>', {
+  noremap = true
+})
+
+-- 支持在 Visual 模式下，通过 C-y 复制到系统剪切板
+vim.api.nvim_set_keymap("v", "<C-y>", '"+y', { noremap = true })
+
+-- 支持在 Normal 模式下，通过 C-p 粘贴系统剪切板
+vim.api.nvim_set_keymap("n", "<C-p>", '"*p', { noremap = true })
+
+-- 打开文件后自动跳转到最后编辑的行
+vim.cmd('autocmd BufReadPost * if line("\'\\\"") > 0 && line("\'\\\"") <= line("$") | execute "normal! g\'\\\"" | endif')
+
+local Util = require("util")
+
+Util.map("n", "<leader>ft", function() Util.float_term(nil, { cwd = Util.get_root() }) end,
+  { desc = "Terminal (root dir)" })
+Util.map("n", "<leader>fT", function() Util.float_term() end, { desc = "Terminal (cwd)" })
+Util.map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
