@@ -98,7 +98,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -110,6 +110,17 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
+        end
+        map('n', '<leader>glb', gs.toggle_current_line_blame)
+        map('n', '<leader>gd', gs.diffthis)
+      end
     },
   },
 
@@ -195,7 +206,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -213,10 +224,15 @@ require('lazy').setup({
 -- See `:help vim.o`
 
 -- Set highlight on search
-vim.o.hlsearch = true
+vim.o.hlsearch = true -- 高亮搜索内容
+vim.o.incsearch = true -- 查找输入时动态增量显示查找结果
+-- Case insensitive searching UNLESS /C or capital in search
+vim.o.ignorecase = true -- 搜索时忽略大小写
+vim.o.smartcase = true -- 智能搜索大小写判断,默认忽略大小写,除非搜索内容包含大写字母
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = false
 
 -- Enable mouse mode
 -- vim.o.mouse = 'a'
@@ -233,10 +249,6 @@ vim.o.breakindent = true
 -- Save undo history
 vim.o.undofile = true
 
--- Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
 
@@ -250,6 +262,14 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+-- 设置不可见字符
+vim.o.list = true
+-- vim.o.listchars = "tab:»·,trail:·,nbsp:+"
+vim.o.listchars = "tab:+-,trail:-,nbsp:-,eol:$"
+
+-- 禁用自动折行
+vim.wo.wrap = false
 
 -- [[ Basic Keymaps ]]
 
@@ -486,7 +506,7 @@ cmp.setup {
     end,
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping.scroll_docs( -4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
@@ -505,8 +525,8 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
+      elseif luasnip.jumpable( -1) then
+        luasnip.jump( -1)
       else
         fallback()
       end
@@ -519,13 +539,54 @@ cmp.setup {
 }
 
 -- FJP add
-vim.keymap.set('n', '<leader>nt', ':NeoTreeRevealToggle<CR>', {
-  noremap = true
-})
+-- 基础配置
+-- require('basic')
+-- 缩进4个空格为一个Tab
+vim.o.tabstop = 4
+vim.bo.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftround = true
+-- >> << 时移动长度?
+vim.o.shiftwidth = 4
+vim.bo.shiftwidth = 4
+-- 空格代替Tab
+-- vim.o.expandtab = true
+-- vim.bo.expandtab = true
 
-vim.keymap.set('n', '<leader>nf', ':NeoTreeFloatToggle<CR>', {
-  noremap = true
-})
+-- utf8
+vim.g.encoding = "UTF-8"
+vim.o.fillencoding = "utf-8"
+-- hjkl 移动时光标周围保留8行
+vim.o.scrolloff = 8
+vim.o.sidescrolloff = 8
+
+-- 高亮所在行
+vim.wo.cursorline = true
+
+-- 新行对齐当前行
+vim.o.autoindent = true
+vim.bo.autoindent = true
+vim.o.smartindent = true
+
+-- 分割窗口从下和右出现
+vim.o.splitbelow = true
+vim.o.splitright = true
+
+vim.o.foldmethod = 'indent'
+vim.o.foldlevelstart = 20
+vim.o.foldlevel = 20
+-- 在行首按h，折叠起来
+vim.api.nvim_set_keymap('n', 'h', "col('.') == 1 && foldlevel(line('.')) > 0 ? 'zc' : 'h'",
+  { expr = true, noremap = true, silent = true })
+-- 在折叠上按 l 键会打开折叠
+vim.api.nvim_set_keymap('n', 'l', "foldclosed(line('.')) != -1 ? 'zo0' : 'l'",
+  { expr = true, noremap = true, silent = true })
+-- 在行首按h，关闭包含在选择范围内的折叠。
+vim.api.nvim_set_keymap('v', 'h', "col('.') == 1 && foldlevel(line('.')) > 0 ? 'zcgv' : 'h'",
+  { expr = true, noremap = true, silent = true })
+-- 在折叠区域中按下 l 键可以打开包含在选择范围中的折叠区域
+vim.api.nvim_set_keymap('v', 'l', "foldclosed(line('.')) != -1 ? 'zogv0' : 'l'",
+  { expr = true, noremap = true, silent = true })
 
 -- 支持在 Visual 模式下，通过 C-y 复制到系统剪切板
 vim.api.nvim_set_keymap("v", "<C-y>", '"+y', { noremap = true })
@@ -535,6 +596,13 @@ vim.api.nvim_set_keymap("n", "<C-p>", '"*p', { noremap = true })
 
 -- 打开文件后自动跳转到最后编辑的行
 vim.cmd('autocmd BufReadPost * if line("\'\\\"") > 0 && line("\'\\\"") <= line("$") | execute "normal! g\'\\\"" | endif')
+-- 设置自动保存
+vim.cmd([[
+augroup autosave
+    autocmd!
+    autocmd BufLeave * silent! wall
+augroup END
+]])
 
 local Util = require("util")
 
@@ -542,6 +610,10 @@ Util.map("n", "<leader>ft", function() Util.float_term(nil, { cwd = Util.get_roo
   { desc = "Terminal (root dir)" })
 Util.map("n", "<leader>fT", function() Util.float_term() end, { desc = "Terminal (cwd)" })
 Util.map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
+
+-- utf8
+vim.g.encoding = "UTF-8"
+vim.o.fillencoding = "utf-8"
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
