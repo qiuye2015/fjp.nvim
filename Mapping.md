@@ -1,5 +1,11 @@
 [toc]
+
+# base
+
+- 查看某个快捷键是在哪个配置文件定义: `:verbose map [快捷键]`
+
 # lazy.nvim
+
 > A modern plugin manager for Neovim
 
 ```bash
@@ -15,11 +21,11 @@
 - [ ] state: ~/.local/state/nvim/lazy
 - [ ] lockfile: ~/.config/nvim/lazy-lock.json
 
-# which-key.nvim 
+# which-key.nvim
 
-> WhichKey is a lua plugin for Neovim 0.5 that displays a popup with possible key bindings of the command you started typing. 
+> WhichKey is a lua plugin for Neovim 0.5 that displays a popup with possible key bindings of the command you started typing.
 >
-> `:checkhealth which_key`	查看是否存在任何冲突的键映射，以防止触发WhichKey
+> `:checkhealth which_key` 查看是否存在任何冲突的键映射，以防止触发 WhichKey
 
 ```bash
 - :WhichKey " show all mappings
@@ -143,7 +149,7 @@ Format			Format current buffer with LSP
 >
 > `:checkhealth mason`
 
-````bash
+```bash
 - :Mason - opens a graphical status window
 - :MasonInstall <package> ... - installs/reinstalls the provided packages
 - :MasonUninstall <package> ... - uninstalls the provided packages
@@ -154,7 +160,7 @@ Format			Format current buffer with LSP
   - DAP: nvim-dap
   - Linters: null-ls.nvim or nvim-lint
   - Formatters: null-ls.nvim or formatter.nvim
-````
+```
 
 ## mason-lspconfig.nvim
 
@@ -170,8 +176,6 @@ Format			Format current buffer with LSP
 - :LspInstall [<server>...]
 - :LspUninstall <server> ...
 ```
-
-
 
 # nvim-cmp
 
