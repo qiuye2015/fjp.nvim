@@ -583,11 +583,38 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   gopls = {},
-  pyright = {},
+  -- pyright = {},
+  pylsp = {
+    pylsp = {
+      plugins = {
+        -- Use black for formatting
+        black = {
+          enabled = true,
+        },
+        -- Use pylint for linting
+        pylint = {
+          enabled = false,
+        },
+        -- Then disable all else
+        yapf = {
+          enabled = false,
+        },
+        autopep8 = {
+          enabled = false,
+        },
+      }
+    }
+  },
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-  -- bashls = {},
+  -- jsonls = {},
+  -- yamlls = {},
+  -- bashls = {
+  --  bashIde = {
+  --    includeAllWorkspaceSymbols = true
+  --  }
+  -- },
   -- cmake = {},
   -- sqlls = {},
   -- dockerls = {},
