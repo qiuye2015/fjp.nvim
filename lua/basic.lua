@@ -6,7 +6,9 @@ print("FJP call lua/basic.lua")
 vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
--- noundofile
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
+
 -- history
 -- 补全增强?
 vim.o.wildmenu = true
@@ -14,10 +16,17 @@ vim.o.wildmenu = true
 -- backspace
 -- Don't pass messages to |ins-completin menu|??
 vim.o.shortmess = vim.o.shortmess .. "c"
+-- disable netrw at the very start of our init.lua, because we use nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 
 -- 文件被外部修改时,自动加载
 vim.o.autoread = true
--- autowrite
+-- Automatically save before :next, :make etc.
+vim.opt.autowrite = true
+-- Change CWD when I open a file
+vim.opt.autochdir = true
 -- 允许隐藏被修改的buffer
 vim.o.hidden = true
 -- helplang
@@ -69,7 +78,7 @@ vim.o.foldlevel = 20
 
 -- 代码补全 --
 -- 自动补全不自动选中 (不一定有效)
--- vim.g.completeopt = "menu,menuone,noselect,noinsert"
+vim.g.completeopt = "menu,menuone,noselect,noinsert"
 -- 补全最多显示10行
 vim.o.pumheight = 10
 
@@ -114,6 +123,8 @@ vim.o.splitright = true
 -- 其他 --
 -- 鼠标支持
 vim.o.mouse = "a"
+-- Copy/paste to system clipboard
+vim.opt.clipboard = 'unnamedplus'
 -- 使用增强状态栏插件后不需要vim模式提示功能
 vim.o.showmode = false
 
@@ -164,4 +175,54 @@ Util.map("n", "<leader>ft", function() Util.float_term(nil, { cwd = Util.get_roo
 Util.map("n", "<leader>fT", function() Util.float_term() end, { desc = "Terminal (cwd)" })
 Util.map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
 
+-- run :GoBuild or :GoTestCompile based on the go file
+local function build_go_files()
+  if vim.endswith(vim.api.nvim_buf_get_name(0), "_test.go") then
+    vim.cmd("GoTestCompile")
+  else
+    vim.cmd("GoBuild")
+  end
+end
 
+-- vim-go
+vim.keymap.set('n', '<leader>b', build_go_files)
+-- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
+-- Hence override our indentation rules.
+vim.api.nvim_create_autocmd('Filetype', {
+  group = vim.api.nvim_create_augroup('setIndent', { clear = true }),
+  pattern = { 'go' },
+  command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
+})
+
+-- Run gofmt/gofmpt, import packages automatically on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
+  pattern = '*.go',
+  callback = function()
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { "source.organizeImports" } }
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 2000)
+    for _, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          vim.lsp.util.apply_workspace_edit(r.edit, "utf-16")
+        else
+          vim.lsp.buf.execute_command(r.command)
+        end
+      end
+    end
+    vim.lsp.buf.format()
+  end
+})
+
+-- Fast saving
+vim.keymap.set('n', '<Leader>w', ':write!<CR>')
+vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
+
+-- If I visually select words and paste from clipboard, don't replace my
+-- clipboard with the selected word, instead keep my old word in the
+-- clipboard
+vim.keymap.set("x", "p", "\"_dP")
+
+-- automatically resize all vim buffers if I resize the terminal window
+-- vim.api.nvim_command('autocmd VimResized * wincmd =')
