@@ -1,4 +1,3 @@
-
 print("FJP call lua/basic.lua")
 
 -- nocompatible
@@ -127,6 +126,10 @@ vim.o.mouse = "a"
 vim.opt.clipboard = 'unnamedplus'
 -- 使用增强状态栏插件后不需要vim模式提示功能
 vim.o.showmode = false
+-- 开启虚拟文本
+vim.opt.virtualedit = "block"
+-- 取消符号隐藏
+vim.opt.conceallevel = 0
 
 
 -----------------------------
@@ -167,6 +170,17 @@ augroup autosave
     autocmd BufLeave * silent! wall
 augroup END
 ]])
+-- Trim whitespace
+vim.api.nvim_create_user_command("TrimWhiteSpace", "keeppatterns %s/\\s\\+$//e <Bar> :nohlsearch", { force = true })
+-- delete blank lines
+vim.api.nvim_create_user_command("DeleteBlankLines", function()
+  local input = vim.fn.input("", ":g/^$/d")
+  vim.cmd(input)
+  vim.fn.histadd("cmd", input)
+end, { force = true })
+-- CDC = Change to Directory of Current file
+vim.api.nvim_create_user_command("CdCurrentDirectory", "lcd %:p:h", { force = true })
+
 
 local Util = require("util")
 
@@ -185,7 +199,7 @@ local function build_go_files()
 end
 
 -- vim-go
-vim.keymap.set('n', '<leader>b', build_go_files)
+vim.keymap.set('n', '<leader>cb', build_go_files,{ desc = 'GoBuild or GoTestCompile' })
 -- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
 -- Hence override our indentation rules.
 vim.api.nvim_create_autocmd('Filetype', {
@@ -215,10 +229,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end
 })
 
--- Fast saving
-vim.keymap.set('n', '<Leader>w', ':write!<CR>')
-vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
-
 -- If I visually select words and paste from clipboard, don't replace my
 -- clipboard with the selected word, instead keep my old word in the
 -- clipboard
@@ -226,3 +236,34 @@ vim.keymap.set("x", "p", "\"_dP")
 
 -- automatically resize all vim buffers if I resize the terminal window
 -- vim.api.nvim_command('autocmd VimResized * wincmd =')
+
+-- Use python3 w.r.t. $PATH as the host python for neovim.
+if vim.g.python3_host_prog == "" or not vim.g.python3_host_prog then
+  vim.g.python3_host_prog = vim.fn.exepath("python3")
+end
+
+-- local function find_python_executable()
+--   if vim.env.VIRTUAL_ENV then
+--     local paths = vim.fn.glob(vim.env.VIRTUAL_ENV .. "/**/bin/python", true, true)
+--     local executable_path = table.concat(paths, ", ")
+--     if executable_path ~= "" then
+--       vim.api.nvim_echo({ { "Using path for python: " .. executable_path, "None" } }, false, {})
+--       return executable_path
+--     end
+--   elseif vim.fn.filereadable(".venv/bin/python") == 1 then
+--     local executable_path = vim.fn.expand(".venv/bin/python")
+--     vim.api.nvim_echo({ { "Using path for python: " .. executable_path, "None" } }, false, {})
+--     return executable_path
+--   end
+--   vim.api.nvim_echo({ { "No python executable found (see autocmds.lua)", "WarningMsg" } }, false, {})
+-- end
+
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = { "python" },
+--   callback = function()
+--     vim.g.python3_host_prog = find_python_executable() -- python executable
+--     vim.opt_local.colorcolumn = "72,88" -- Ruler at column number
+--     vim.opt_local.tabstop = 4 -- Number of spaces tabs count for
+--     vim.opt_local.shiftwidth = 4 -- Size of an indent
+--   end,
+-- })

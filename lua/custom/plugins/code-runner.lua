@@ -1,0 +1,67 @@
+return {}
+--return {
+--  "CRAG666/code_runner.nvim",
+--  cmd = {
+--    "RunCode",
+--    "RunFile",
+--    "RunProject",
+--    "RunClose",
+--    "CRFiletype",
+--    "CRProjects",
+--  },
+--  keys = {
+--    {
+--      "<leader>cr",
+--      function()
+--        require("code_runner").run_code()
+--      end,
+--      desc = "Execute Code",
+--    },
+--  },
+--  config = function()
+--    local code_runner = require("code_runner")
+
+--    code_runner.setup({
+--      -- mode = "term",
+--      mode = "float",
+--      startinsert = true,
+--      filetype = {
+--        java = "cd $dir && javac $fileName && java $fileNameWithoutExt",
+--        python = "python3 -u",
+--        sh = "bash",
+--        c = "cd $dir && mkdir -p bin && cd bin && gcc ../$fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+--        cpp = "cd $dir && mkdir -p bin && cd bin && g++ ../$fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+--        go = {
+--          "cd $dir &&",
+--          "go run $fileName &&",
+--        },
+--        lua = "lua $file",
+--        rust = "cargo run",
+--      },
+--      term = {
+--        --position = "vert",
+--        position = "bot",
+--        size = 50,
+--      },
+--      float = {
+--        -- Key that close the code_runner floating window
+--        close_key = "<ESC>",
+--        -- Window border (see ':h nvim_open_win')
+--        border = "rounded",
+
+--        -- Num from `0 - 1` for measurements
+--        height = 0.8,
+--        width = 0.8,
+--        x = 0.5,
+--        y = 0.5,
+
+--        -- Highlight group for floating window/border (see ':h winhl')
+--        border_hl = "FloatBorder",
+--        float_hl = "Normal",
+
+--        -- Transparency (see ':h winblend')
+--        blend = 0,
+--      },
+--    })
+--  end
+--}

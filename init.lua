@@ -113,7 +113,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',   opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -222,25 +222,28 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {
-    ---Add a space b/w comment and the line
-    padding = true,
-    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
-    opleader = {
-      ---Line-comment keymap
-      line = 'gcp', -- line = 'gc',
-      ---Block-comment keymap
-      block = 'gbp', -- block = 'gb',
-    },
-    ---Enable keybindings
-    ---NOTE: If given `false` then the plugin won't create any mappings
-    mappings = {
-      ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-      basic = true,
-      ---Extra mapping; `gco`, `gcO`, `gcA`
-      extra = false,
-    },
-  } },
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+      ---Add a space b/w comment and the line
+      padding = true,
+      ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+      opleader = {
+        ---Line-comment keymap
+        line = 'gcp', -- line = 'gc',
+        ---Block-comment keymap
+        block = 'gbp', -- block = 'gb',
+      },
+      ---Enable keybindings
+      ---NOTE: If given `false` then the plugin won't create any mappings
+      mappings = {
+        ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+        basic = true,
+        ---Extra mapping; `gco`, `gcO`, `gcA`
+        extra = false,
+      },
+    }
+  },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -275,8 +278,8 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -553,8 +556,10 @@ end
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+  ['<leader>f'] = { name = '[F]loat Term', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+  ['<leader>n'] = { name = '[N]eotree', _ = 'which_key_ignore' },
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
@@ -587,19 +592,32 @@ local servers = {
   pylsp = {
     pylsp = {
       plugins = {
-        -- Use black for formatting
-        black = {
+        -- formatter options
+        black       = {
+          enabled = true, -- PylspInstall python-lsp-black pyls-isort
+          line_length = 120,
+        },
+        yapf        = {
+          enabled = false,
+        },
+        autopep8    = {
+          enabled = false,
+        },
+        -- import sorting
+        isort       = {
           enabled = true,
         },
-        -- Use pylint for linting
-        pylint = {
+        -- linter options
+        pylint      = {
           enabled = false,
         },
-        -- Then disable all else
-        yapf = {
+        pyflakes    = {
           enabled = false,
         },
-        autopep8 = {
+        pycodestyle = {
+          enabled = false,
+        },
+        mccabe      = {
           enabled = false,
         },
       }
@@ -709,6 +727,7 @@ cmp.setup {
 -- FJP add
 -- 基础配置
 require('basic')
+require('auto_runner')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

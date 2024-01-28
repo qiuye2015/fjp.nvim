@@ -17,15 +17,15 @@
 
 ## Uninstalling
 
-- [ ] data: ~/.local/share/nvim/lazy
-- [ ] state: ~/.local/state/nvim/lazy
-- [ ] lockfile: ~/.config/nvim/lazy-lock.json
+- [ ] data: `~/.local/share/nvim/lazy`
+- [ ] state: `~/.local/state/nvim/lazy`
+- [ ] lockfile: `~/.config/nvim/lazy-lock.json`
 
 # which-key.nvim
 
 > WhichKey is a lua plugin for Neovim 0.5 that displays a popup with possible key bindings of the command you started typing.
 >
-> `:checkhealth which_key` 查看是否存在任何冲突的键映射，以防止触发 WhichKey
+> `:checkhealth which-key` 查看是否存在任何冲突的键映射，以防止触发 WhichKey
 
 ```bash
 - :WhichKey " show all mappings
@@ -53,7 +53,7 @@
 > 代码高亮
 
 - `:TSInstallInfo` 查看已安装的 Language parser
-- `TSModuleInfo`
+- `:TSModuleInfo`
 - `:TSInstall <language_to_install>`
 
 # Comment.nvim
@@ -156,10 +156,10 @@ Format			Format current buffer with LSP
 - :MasonUninstallAll - uninstalls all packages
 - :MasonLog - opens the mason.nvim log file in a new tab window
 
-  - LSP: lspconfig & mason-lspconfig.nvim
-  - DAP: nvim-dap
-  - Linters: null-ls.nvim or nvim-lint
-  - Formatters: null-ls.nvim or formatter.nvim
+- LSP: lspconfig & mason-lspconfig.nvim
+- DAP: nvim-dap
+- Linters: null-ls.nvim or nvim-lint
+- Formatters: null-ls.nvim or formatter.nvim
 ```
 
 ## mason-lspconfig.nvim
@@ -177,6 +177,10 @@ Format			Format current buffer with LSP
 - :LspUninstall <server> ...
 ```
 
+> 改`~/.local/share/nvim/mason/packages/python-lsp-server/venv/pyvenv.cfg` 
+> 
+> `include-system-site-packages=true`
+
 # nvim-cmp
 
 > 代码补全引擎
@@ -184,4 +188,3 @@ Format			Format current buffer with LSP
 - `cmp-xxx` 基本都是插件补全来源，也就是说当你输入一个变量的时候，可以从多个来源显示补全的内容
 - `cmp-nvim-lsp` 就是 Neovim 内置 LSP 提供的补全内容
 - `cmp-path` 则是用来补全路径，如果配置了这个，当输入一个路径的时候会补全路径
-
