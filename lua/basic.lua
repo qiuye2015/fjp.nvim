@@ -15,9 +15,6 @@ vim.o.wildmenu = true
 -- backspace
 -- Don't pass messages to |ins-completin menu|??
 vim.o.shortmess = vim.o.shortmess .. "c"
--- disable netrw at the very start of our init.lua, because we use nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 
 
 -- 文件被外部修改时,自动加载

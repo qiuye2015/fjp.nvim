@@ -626,7 +626,7 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-  -- jsonls = {},
+  jsonls = {},
   -- yamlls = {},
   -- bashls = {
   --  bashIde = {

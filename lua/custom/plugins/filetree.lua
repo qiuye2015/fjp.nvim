@@ -14,6 +14,9 @@ return {
     { "<leader>nf", "<cmd>:Neotree filesystem float toggle<cr>",  desc = "NeoTree float toggle" },
   },
   config = function()
+    -- disable netrw at the very start of our init.lua, because we use nvim-tree
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
     require("neo-tree").setup({
       close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
     })
