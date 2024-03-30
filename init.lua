@@ -859,5 +859,10 @@ require('lazy').setup({
   },
 })
 
+-- FJP add
+-- 基础配置
+require('basic')
+require('auto_runner')
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
