@@ -538,6 +538,27 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        pylsp = {
+          pylsp = {
+            plugins = {
+              -- Use black for formatting
+              black = {
+                enabled = true,
+              },
+              -- Use pylint for linting
+              pylint = {
+                enabled = false,
+              },
+              -- Then disable all else
+              yapf = {
+                enabled = false,
+              },
+              autopep8 = {
+                enabled = false,
+              },
+            },
+          },
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -626,7 +647,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -848,6 +869,9 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  { import = 'myself.ui' },
+  { import = 'myself.git' },
+  { import = 'myself.code' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -869,6 +893,19 @@ require('lazy').setup({
     },
   },
 })
+
+-- FJP ADD
+require 'myself.basic'
+require 'myself.auto_runner'
+require('which-key').register {
+  -- ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+  -- ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+  -- ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+  -- ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+  -- ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+  ['<leader>t'] = { name = '[T]erm || [T]agbar', _ = 'which_key_ignore' },
+  ['<leader>n'] = { name = '[N]eotree', _ = 'which_key_ignore' },
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
