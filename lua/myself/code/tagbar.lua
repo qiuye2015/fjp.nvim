@@ -1,7 +1,7 @@
 return {
   'preservim/tagbar',
   lazy = true,
-  ft = { 'markdown', 'go', 'lua', 'python', 'cpp', 'java' },
+  ft = { 'markdown', 'go', 'lua', 'python', 'c', 'cpp', 'java' },
   config = function()
     vim.keymap.set('n', '<leader>tb', ':TagbarToggle<cr>', { noremap = true })
     -- vim.g.tagbar_autoclose = 1
