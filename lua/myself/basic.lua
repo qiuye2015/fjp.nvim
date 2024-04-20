@@ -34,7 +34,7 @@ vim.o.timeoutlen = 500
 -- fileformat
 -- utf8
 vim.g.encoding = 'UTF-8'
-vim.o.fileencoding = 'utf-8'
+vim.o.fileencoding = 'UTF-8'
 -- fileencodings
 
 -- 搜索设置 --
