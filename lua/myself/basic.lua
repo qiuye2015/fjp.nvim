@@ -256,3 +256,26 @@ end
 --     vim.opt_local.shiftwidth = 4 -- Size of an indent
 --   end,
 -- })
+
+-- 定义一个函数，用于切换透明背景的开关状态
+function ToggleTransparency()
+  if vim.g.transparency == true then
+    -- 关闭透明背景
+    vim.cmd [[highlight Normal guibg=#1a1b26 ctermbg=none]]
+    vim.cmd [[highlight NonText guibg=#1a1b26 ctermbg=none]]
+    vim.cmd [[highlight LineNr guibg=#1a1b26 ctermbg=none]]
+    vim.g.transparency = false
+  else
+    -- 开启透明背景
+    vim.cmd [[highlight Normal guibg=none ctermbg=none]]
+    vim.cmd [[highlight NonText guibg=none ctermbg=none]]
+    vim.cmd [[highlight LineNr guibg=none ctermbg=none]]
+    vim.g.transparency = true
+  end
+end
+
+-- 设置一个快捷键来切换透明背景
+vim.api.nvim_set_keymap('n', '<leader>tt', ':lua ToggleTransparency()<CR>', { noremap = true, silent = true })
+
+-- 初始化透明背景状态为关闭（可选）
+vim.g.transparency = false
