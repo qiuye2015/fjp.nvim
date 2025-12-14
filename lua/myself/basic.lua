@@ -34,7 +34,14 @@ vim.o.timeoutlen = 500
 -- fileformat
 -- utf8
 vim.g.encoding = 'UTF-8'
-vim.o.fileencoding = 'UTF-8'
+-- vim.o.fileencoding = 'UTF-8'
+if vim.api.nvim_buf_get_option(0, 'modifiable') then
+  vim.o.fileencoding = 'UTF-8'
+else
+  vim.cmd([[setlocal modifiable]])
+  vim.o.fileencoding = 'UTF-8'
+end
+
 -- fileencodings
 
 -- 搜索设置 --
@@ -108,6 +115,13 @@ vim.o.inccommand = 'split'
 vim.o.cmdheight = 2
 -- 永远显示 tabline?
 vim.o.showtabline = 2
+-- 启用全局状态栏,不管当前有多少窗口被分割,
+-- 状态栏都会是一个全局的统一状态栏，
+-- 而不是为每个窗口单独显示一个状态栏
+-- 0:从不显示状态栏; 1:仅在有多个窗口时显示状态栏;
+-- 2:总是为每个窗口显示状态栏;
+-- 3:启用全局状态栏，只有一个状态栏位于最底部;
+vim.opt.laststatus = 3
 
 -- 主题设置 --
 -- 样式

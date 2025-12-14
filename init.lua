@@ -992,6 +992,7 @@ require('lazy').setup({
 
 -- FJP ADD
 require 'myself.basic'
+require 'myself.keymap'
 require 'myself.auto_runner'
 -- require('which-key').register {
 --   -- ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
